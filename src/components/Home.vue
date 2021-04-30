@@ -267,7 +267,7 @@ export default {
   },
   methods: {
     addTab(targetName) {
-      console.log(targetName)
+      // console.log(targetName)
       let iflag = true
       let tabs = this.editableTabs
       tabs.forEach(tab => {
@@ -378,5 +378,15 @@ export default {
 .el-tabs.el-tabs--top.el-tabs--border-card {
   height: 100%;
   border: none;
+  overflow: hidden;
+}
+.el-tab-pane{
+  height: 80vh;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.el-tab-pane::-webkit-scrollbar {
+  display: none;
 }
 </style>
