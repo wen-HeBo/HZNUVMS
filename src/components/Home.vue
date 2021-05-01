@@ -6,7 +6,7 @@
         <el-dropdown @command="addTab">
           <span style="color: #ffffef">
             <i class="el-icon-user-solid" style="margin-left: 2px;color: #ffffef"></i>
-            {{ uname }}
+            {{ $store.state.uname }}
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="26">个人信息</el-dropdown-item>
@@ -75,9 +75,9 @@
           <div style="height:59px"></div>
         </el-aside>
         <el-main>
-          <el-tabs v-model="editableTabsValue" type="border-card" @tab-remove="removeTab">
+          <el-tabs v-model="$store.state.editableTabsValue" type="border-card" @tab-remove="removeTab">
             <el-tab-pane label="主页" name="0">主页</el-tab-pane>
-            <el-tab-pane v-for="item in editableTabs" :key="item.name" :label="item.title" :name="item.name" closable>
+            <el-tab-pane v-for="item in $store.state.editableTabs" :key="item.name" :label="item.title" :name="item.name" closable>
               <component :is="item.content"></component>
             </el-tab-pane>
           </el-tabs>
@@ -118,8 +118,6 @@ import About from '@/components/About'
 export default {
   data() {
     return {
-      uname: 'ppKritt',
-      editableTabsValue: '0',
       tab: [
         {
           title: '新建招募',
@@ -261,52 +259,15 @@ export default {
           name: '28',
           content: About
         }
-      ],
-      editableTabs: []
+      ]
     }
   },
   methods: {
     addTab(targetName) {
-      // console.log(targetName)
-      let iflag = true
-      let tabs = this.editableTabs
-      tabs.forEach(tab => {
-        if (tab.name === targetName) {
-          // console.log(tab.name)
-          this.editableTabsValue = tab.name
-          iflag = false
-        }
-      })
-      if (iflag) {
-        this.tab.forEach(tab => {
-          if (tab.name === targetName) {
-            this.editableTabs.push(tab)
-          }
-        })
-        // console.log(e.$slots.default[0].text)
-        this.editableTabsValue = targetName
-      }
+      this.$store.commit('addTabs', { targetName: targetName, tab: this.tab })
     },
     removeTab(targetName) {
-      let tabs = this.editableTabs
-      let activeName = this.editableTabsValue
-      if (activeName === targetName) {
-        tabs.forEach((tab, index) => {
-          if (tab.name === targetName) {
-            let nextTab = tabs[index + 1] || tabs[index - 1]
-            if (nextTab) {
-              activeName = nextTab.name
-            }
-          }
-        })
-      }
-
-      this.editableTabsValue = activeName
-
-      this.editableTabs = tabs.filter(tab => tab.name !== targetName)
-      if (this.editableTabs.length === 0) {
-        this.editableTabsValue = '0'
-      }
+      this.$store.commit('removeTabs', targetName)
     }
   },
   components: {
@@ -380,7 +341,7 @@ export default {
   border: none;
   overflow: hidden;
 }
-.el-tab-pane{
+.el-tab-pane {
   height: 80vh;
   overflow-y: auto;
   -ms-overflow-style: none;
