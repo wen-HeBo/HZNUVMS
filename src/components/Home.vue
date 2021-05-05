@@ -31,7 +31,7 @@
               <el-menu-item index="2-2" @click="addTab('5')">查询活动</el-menu-item>
             </el-submenu>
             <el-submenu index="3">
-              <template slot="title"><i class="el-icon-s-order"></i>活动高级管理</template>
+              <template slot="title"><i class="el-icon-s-check"></i>活动高级管理</template>
               <el-menu-item index="3-1" @click="addTab('6')">活动审批</el-menu-item>
               <el-submenu index="3-2">
                 <template slot="title">共建基地管理</template>

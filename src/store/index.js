@@ -29,6 +29,20 @@ export default new Vuex.Store({
         state.editableTabsValue = tabInfo.targetName
       }
     },
+    addTab(state, tabInfo) {
+      let iflag = true
+      let tabs = state.editableTabs
+      tabs.forEach(tab => {
+        if (tab.name === tabInfo.name) {
+          state.editableTabsValue = tab.name
+          iflag = false
+        }
+      })
+      if (iflag) {
+        state.editableTabs.push(tabInfo)
+        state.editableTabsValue = tabInfo.name
+      }
+    },
     removeTabs(state, targetName) {
       let tabs = state.editableTabs
       let activeName = state.editableTabsValue
