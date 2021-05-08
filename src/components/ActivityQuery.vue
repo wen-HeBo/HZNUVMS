@@ -107,7 +107,7 @@ export default {
   methods: {
     search() {
       if (this.radio === '1') return this.activityData.filter(item => item.name.includes(this.keyword))
-      if (this.radio === '2') return this.activityData.filter(item => item.time.includes(this.keyword))
+      if (this.radio === '2') return this.activityData.filter(item => item.organization.includes(this.keyword))
     },
     handleSizeChange(val) {
       this.pageSize = val
