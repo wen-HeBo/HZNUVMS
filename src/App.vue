@@ -40,4 +40,7 @@ span.el-pagination__jump {
 .ppk .el-input__inner {
   border-radius: 0 4px 4px 0;
 }
+.el-form-item.ppK.el-form-item--feedback .el-form-item__content {
+  margin: 0px !important;
+}
 </style>

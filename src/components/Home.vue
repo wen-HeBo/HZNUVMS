@@ -34,7 +34,7 @@
               <template slot="title"><i class="el-icon-s-check"></i>活动高级管理</template>
               <el-menu-item index="3-1" @click="addTab('6')">活动审批</el-menu-item>
               <el-submenu index="3-2">
-                <template slot="title">共建基地管理</template>
+                <template slot="title"><i class="el-icon-s-home"></i>共建基地管理</template>
                 <el-menu-item index="3-2-1" @click="addTab('7')">新建共建基地</el-menu-item>
                 <el-menu-item index="3-2-2" @click="addTab('8')">共建基地管理</el-menu-item>
                 <el-menu-item index="3-2-3" @click="addTab('9')">共建基地概况</el-menu-item>
@@ -76,7 +76,13 @@
         </el-aside>
         <el-main>
           <el-tabs v-model="$store.state.editableTabsValue" type="border-card" @tab-remove="removeTab">
-            <el-tab-pane label="主页" name="0">主页</el-tab-pane>
+            <el-tab-pane label="主页" name="0">
+              <el-carousel :interval="5000" arrow="always">
+                <el-carousel-item v-for="item in 4" :key="item">
+                  <h3>{{ item }}</h3>
+                </el-carousel-item>
+              </el-carousel>
+            </el-tab-pane>
             <el-tab-pane v-for="item in $store.state.editableTabs" :key="item.name" :label="item.title" :name="item.name" closable>
               <component :is="item.content"></component>
             </el-tab-pane>
@@ -349,5 +355,20 @@ export default {
 }
 .el-tab-pane::-webkit-scrollbar {
   display: none;
+}
+.el-carousel__item h3 {
+  color: #475669;
+  font-size: 18px;
+  opacity: 0.75;
+  line-height: 300px;
+  margin: 0;
+}
+
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n + 1) {
+  background-color: #d3dce6;
 }
 </style>

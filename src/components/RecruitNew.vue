@@ -1,7 +1,7 @@
 <template>
   <div class="r">
     <el-form ref="form" :model="recruitForm" label-width="80px" style="padding-right:20px" size="large">
-      <el-row style="margin-bottom:22px"  class="ppk">
+      <el-row style="margin-bottom:22px" class="ppk">
         <div class="pre" style="float: left;border-right: 0;border-top-right-radius: 0;border-bottom-right-radius: 0;">招募校区</div>
         <el-checkbox-group v-model="recruitForm.campus" style="float:left">
           <el-checkbox-button style="border-top-left-radius: 0;border-bottom-left-radius: 0;" label="仓前校区" name="campus1" checked></el-checkbox-button>
@@ -34,7 +34,7 @@
         </el-input>
       </el-row>
 
-      <el-row style="margin-bottom:22px"  class="ppk">
+      <el-row style="margin-bottom:22px" class="ppk">
         <div class="pre" style="text-align: left;border-bottom: 0;border-bottom-left-radius: 0;border-bottom-right-radius: 0;">活动详情</div>
         <el-input type="textarea" v-model="recruitForm.main" :autosize="{ minRows: 10 }" placeholder="请输入活动详情（至少50字）"> </el-input>
       </el-row>
@@ -62,7 +62,7 @@
         <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" style="float:left; postion:relative;left:-97px;">全选</el-checkbox>
         <div style="margin: 15px 0;"></div>
 
-        <el-checkbox-group v-model="recruitForm.college" @change="handleCheckedCitiesChange" style="float:left">
+        <el-checkbox-group v-model="recruitForm.college" @change="handleCheckedChange" style="float:left">
           <el-checkbox v-for="college in colleges" :label="college" :key="college" style="float:left">{{ college }}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
@@ -75,7 +75,6 @@
 
       <el-form-item size="large">
         <el-button type="primary" @click="onSubmit">发布招募</el-button>
-        <el-button>取消</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -125,7 +124,7 @@ export default {
       this.recruitForm.college = val ? this.colleges : []
       this.isIndeterminate = false
     },
-    handleCheckedCitiesChange(value) {
+    handleCheckedChange(value) {
       let checkedCount = value.length
       this.checkAll = checkedCount === this.colleges.length
       this.isIndeterminate = checkedCount > 0 && checkedCount < this.colleges.length
