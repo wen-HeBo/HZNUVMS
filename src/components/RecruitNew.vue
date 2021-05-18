@@ -57,6 +57,18 @@
         </el-checkbox-group>
       </el-row>
 
+      <el-row style="margin-bottom:22px">
+        <el-input v-model="recruitForm.s_time" placeholder="请输入时间选项以空格结尾（非必填项，当且仅有一个时间选项时，可空白此选项）">
+          <template slot="prepend">时间选项</template>
+        </el-input>
+      </el-row>
+
+      <el-row style="margin-bottom:22px">
+        <el-input v-model="recruitForm.s_address" placeholder="请输入地点选项以空格结尾（非必填项，当且仅有一个地点选项时，可空白此选项）">
+          <template slot="prepend">地点选项</template>
+        </el-input>
+      </el-row>
+
       <el-form-item style="margin-left: 30px;">
         <div class="pre" style="float: left;postion:relative;left:-110px;">定向招募</div>
         <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" style="float:left; postion:relative;left:-97px;">全选</el-checkbox>
@@ -88,7 +100,8 @@ export default {
         '经济与管理学院',
         '沈钧儒法学院',
         '公共管理学院',
-        '教育学院体育与健康学院',
+        '教育学院',
+        '体育与健康学院',
         '人文学院',
         '外国语学院',
         '理学院',
@@ -114,6 +127,8 @@ export default {
         main: '',
         auth: [],
         showNum: [],
+        s_time: '',
+        s_address: '',
         college: [],
         phone: ''
       }

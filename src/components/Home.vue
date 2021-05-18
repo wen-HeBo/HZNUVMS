@@ -9,9 +9,9 @@
             {{ $store.state.uname }}
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="26">个人信息</el-dropdown-item>
-            <el-dropdown-item command="27">修改密码</el-dropdown-item>
-            <el-dropdown-item command="28">关于系统</el-dropdown-item>
+            <el-dropdown-item command="23">个人信息</el-dropdown-item>
+            <el-dropdown-item command="24">修改密码</el-dropdown-item>
+            <el-dropdown-item command="25">关于系统</el-dropdown-item>
             <el-dropdown-item>退出系统</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -40,36 +40,30 @@
                 <el-menu-item index="3-2-3" @click="addTab('9')">共建基地概况</el-menu-item>
               </el-submenu>
             </el-submenu>
-            <el-submenu index="4">
-              <template slot="title"><i class="el-icon-search"></i>志愿时数查询</template>
-              <el-menu-item index="4-1" @click="addTab('10')">一般查询</el-menu-item>
-              <el-menu-item index="4-2" @click="addTab('11')">批量查询</el-menu-item>
-            </el-submenu>
+            <el-menu-item index="4" @click="addTab('10')"> <i class="el-icon-search"></i><span slot="title">志愿时数查询</span> </el-menu-item>
             <el-submenu index="5">
               <template slot="title"><i class="el-icon-edit-outline"></i>志愿时数管理</template>
-              <el-menu-item index="5-1" @click="addTab('12')">志愿时数导入</el-menu-item>
-              <el-menu-item index="5-2" @click="addTab('13')">志愿时数审核</el-menu-item>
-              <el-menu-item index="5-3" @click="addTab('14')">志愿时数删除</el-menu-item>
-              <el-menu-item index="5-3" @click="addTab('15')">志愿活动时数总览</el-menu-item>
+              <el-menu-item index="5-1" @click="addTab('11')">志愿时数导入</el-menu-item>
+              <el-menu-item index="5-2" @click="addTab('12')">志愿时数管理</el-menu-item>
+              <el-menu-item index="5-3" @click="addTab('13')">志愿活动时数总览</el-menu-item>
             </el-submenu>
             <el-submenu index="6">
               <template slot="title"><i class="el-icon-document"></i>志愿者信用名单管理</template>
-              <el-menu-item index="6-1" @click="addTab('16')">黑名单</el-menu-item>
-              <el-menu-item index="6-2" @click="addTab('17')">志愿者信用积分管理</el-menu-item>
-              <el-menu-item index="6-3" @click="addTab('18')">志愿者信用积分查询</el-menu-item>
-              <el-menu-item index="6-4" @click="addTab('19')">志愿者信用积分管理条例</el-menu-item>
+              <el-menu-item index="6-1" @click="addTab('14')">黑名单</el-menu-item>
+              <el-menu-item index="6-2" @click="addTab('15')">志愿者信用积分管理</el-menu-item>
+              <el-menu-item index="6-3" @click="addTab('16')">志愿者信用积分管理条例</el-menu-item>
             </el-submenu>
-            <el-menu-item index="7" @click="addTab('20')">
+            <el-menu-item index="7" @click="addTab('17')">
               <i class="el-icon-chat-line-square"></i>
               <span slot="title">志愿者反馈管理</span>
             </el-menu-item>
             <el-submenu index="8">
               <template slot="title"><i class="el-icon-menu"></i>系统管理</template>
-              <el-menu-item index="8-1" @click="addTab('21')">用户管理</el-menu-item>
-              <el-menu-item index="8-2" @click="addTab('22')">新建公告</el-menu-item>
-              <el-menu-item index="8-3" @click="addTab('23')">系统日志</el-menu-item>
-              <el-menu-item index="8-4" @click="addTab('24')">系统更新</el-menu-item>
-              <el-menu-item index="8-5" @click="addTab('25')">志愿者征信管理条例</el-menu-item>
+              <el-menu-item index="8-1" @click="addTab('18')">用户管理</el-menu-item>
+              <el-menu-item index="8-2" @click="addTab('19')">新建公告</el-menu-item>
+              <el-menu-item index="8-3" @click="addTab('20')">系统日志</el-menu-item>
+              <el-menu-item index="8-4" @click="addTab('21')">系统更新</el-menu-item>
+              <el-menu-item index="8-5" @click="addTab('22')">志愿者征信管理条例</el-menu-item>
             </el-submenu>
           </el-menu>
           <div style="height:59px"></div>
@@ -103,14 +97,11 @@ import BaseNew from '@/components/BaseNew'
 import BaseManage from '@/components/BaseManage'
 import BaseSurvey from '@/components/BaseSurvey'
 import QueryNormal from '@/components/QueryNormal'
-import QueryMore from '@/components/QueryMore'
 import HoursImport from '@/components/HoursImport'
-import HoursExamine from '@/components/HoursExamine'
-import HoursDelete from '@/components/HoursDelete'
+import HoursManage from '@/components/HoursManage'
 import HoursOverview from '@/components/HoursOverview'
 import Blacklist from '@/components/Blacklist'
 import CreditManage from '@/components/CreditManage'
-import CreditQuery from '@/components/CreditQuery'
 import CreditRules from '@/components/CreditRules'
 import Feedback from '@/components/Feedback'
 import Users from '@/components/Users'
@@ -171,98 +162,83 @@ export default {
           content: BaseSurvey
         },
         {
-          title: '一般查询',
+          title: '志愿时数查询',
           name: '10',
           content: QueryNormal
         },
         {
-          title: '批量查询',
-          name: '11',
-          content: QueryMore
-        },
-        {
           title: '志愿时数导入',
-          name: '12',
+          name: '11',
           content: HoursImport
         },
         {
-          title: '志愿时数审核',
-          name: '13',
-          content: HoursExamine
-        },
-        {
-          title: '志愿时数删除',
-          name: '14',
-          content: HoursDelete
+          title: '志愿时数管理',
+          name: '12',
+          content: HoursManage
         },
         {
           title: '志愿活动时数总览',
-          name: '15',
+          name: '13',
           content: HoursOverview
         },
         {
           title: '黑名单',
-          name: '16',
+          name: '14',
           content: Blacklist
         },
         {
           title: '志愿者信用积分管理',
-          name: '17',
+          name: '15',
           content: CreditManage
         },
         {
-          title: '志愿者信用积分查询',
-          name: '18',
-          content: CreditQuery
-        },
-        {
           title: '志愿者信用积分管理条例',
-          name: '19',
+          name: '16',
           content: CreditRules
         },
         {
           title: '志愿者反馈管理',
-          name: '20',
+          name: '17',
           content: Feedback
         },
         {
           title: '用户管理',
-          name: '21',
+          name: '18',
           content: Users
         },
         {
           title: '新建公告',
-          name: '22',
+          name: '19',
           content: Notice
         },
         {
           title: '系统日志',
-          name: '23',
+          name: '20',
           content: Log
         },
         {
           title: '系统更新',
-          name: '24',
+          name: '21',
           content: Update
         },
         {
           title: '志愿者征信管理条例',
-          name: '25',
+          name: '22',
           content: Rules
         },
         {
           title: '个人信息',
-          name: '26',
+          name: '23',
           content: Information
         },
         {
           title: '修改密码',
-          name: '27',
+          name: '24',
           content: Password
         },
         {
           title: '关于系统',
-          name: '28',
+          name: '25',
           content: About
         }
       ]
@@ -287,14 +263,11 @@ export default {
     BaseManage,
     BaseSurvey,
     QueryNormal,
-    QueryMore,
     HoursImport,
-    HoursExamine,
-    HoursDelete,
+    HoursManage,
     HoursOverview,
     Blacklist,
     CreditManage,
-    CreditQuery,
     CreditRules,
     Feedback,
     Users,

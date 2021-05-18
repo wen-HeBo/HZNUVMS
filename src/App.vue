@@ -43,4 +43,7 @@ span.el-pagination__jump {
 .el-form-item.ppK.el-form-item--feedback .el-form-item__content {
   margin: 0px !important;
 }
+.ppK.el-input.el-input--mini input.el-input__inner{
+  text-align: center;
+}
 </style>

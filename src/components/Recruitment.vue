@@ -15,11 +15,6 @@
       <el-button type="warning">通过小程序发送录取结果通知</el-button>
     </el-row>
     <br /><br />
-    <el-divider content-position="left">志愿时数录入</el-divider>
-    <el-row style="text-align: left;margin-left: 30px">
-      <el-button>生成志愿时数表</el-button>
-    </el-row>
-    <br /><br />
     <el-divider content-position="left">报名信息</el-divider>
     <div v-if="timeFlag">
       <el-table :data="timeData" style="width: 100%" border>
