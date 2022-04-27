@@ -1,9 +1,13 @@
 <template>
   <div>
     <el-divider content-position="left">活动详情</el-divider>
-    <el-table :show-header="false" :data="activityData" style="width: 100%;" stripe border>
+    <el-table :show-header="false" :data="activityData" style="width: 100%;" stripe border v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
       <el-table-column width="180" prop="name" align="center"></el-table-column>
-      <el-table-column prop="info"></el-table-column>
+      <el-table-column prop="info">
+        <template slot-scope="scope">
+          <div v-html="scope.row.info"></div>
+        </template>
+      </el-table-column>
     </el-table>
     <div style="height: 20px"></div>
     <el-form>
@@ -12,8 +16,8 @@
         <el-input type="textarea" v-model="approvalInfo" :autosize="{ minRows: 5 }" placeholder="请输入审批意见"> </el-input>
       </el-row>
       <el-form-item size="large">
-        <el-button type="success">审批通过</el-button>
-        <el-button type="danger">审批不通过</el-button>
+        <el-button type="success" @click="btnHandler(2)">审批通过</el-button>
+        <el-button type="danger" @click="btnHandler(1)">审批不通过</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -22,6 +26,8 @@
 export default {
   data() {
     return {
+      loading: false,
+      aid: '',
       approvalInfo: '',
       activityData: [
         {
@@ -49,15 +55,58 @@ export default {
           info: ''
         },
         {
-          name: '提交信息',
-          info: ''
-        },
-        {
           name: '活动详情',
           info: ''
         }
       ]
     }
+  },
+  methods: {
+    btnHandler(status) {
+      this.$api
+        .approvalActivity({
+          aid: this.aid,
+          status: status,
+          approval: this.approvalInfo
+        })
+        .then(() => {
+          this.$message({
+            message: '审核成功',
+            type: 'success'
+          })
+          this.$store.commit('updateActivity', true)
+          this.$store.commit('updateActivityList', true)
+          this.$store.commit('updateActivityApproval', true)
+        })
+        .then(() => {
+          this.$store.commit('removeTabs', this.$parent.name)
+        })
+    },
+    loadData() {
+      this.loading = true
+      this.$api
+        .getActivityById({
+          aid: this.aid
+        })
+        .then(res => {
+          this.activityData[0].info = res.data.data.aid
+          if (res.data.acode !== null) {
+            this.activityData[1].info = res.data.data.acode
+          }
+          this.activityData[2].info = res.data.data.aname
+          this.activityData[3].info = res.data.data.aorganizer
+          this.activityData[4].info = res.data.data.astarttime
+          this.activityData[5].info = res.data.data.aendtime
+          this.activityData[6].info = res.data.data.ainfo
+        })
+        .then(() => {
+          this.loading = false
+        })
+    }
+  },
+  created() {
+    this.aid = this.$parent.name.slice(2)
+    this.loadData()
   }
 }
 </script>

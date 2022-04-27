@@ -15,13 +15,13 @@
     </el-row>
 
     <div class="block">
-      <el-table :data="search().slice((currentPage - 1) * pageSize, currentPage * pageSize)" border style="width: 100%">
-        <el-table-column prop="id" label="活动号" align="center" width="80"> </el-table-column>
-        <el-table-column prop="name" label="活动名称" align="center"> </el-table-column>
-        <el-table-column prop="startTime" label="开始时间" align="center" width="110"> </el-table-column>
-        <el-table-column prop="endTime" label="结束时间" align="center" width="110"> </el-table-column>
-        <el-table-column prop="state" label="活动状态" align="center" v-if="select === '1'" width="150"> </el-table-column>
-        <el-table-column prop="organization" label="组织名称" align="center"> </el-table-column>
+      <el-table :data="search().slice((currentPage - 1) * pageSize, currentPage * pageSize)" border style="width: 100%" v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
+        <el-table-column prop="aid" label="活动号" align="center" width="80"> </el-table-column>
+        <el-table-column prop="aname" label="活动名称" align="center"> </el-table-column>
+        <el-table-column prop="astarttime" label="开始时间" align="center" width="110"> </el-table-column>
+        <el-table-column prop="aendtime" label="结束时间" align="center" width="110"> </el-table-column>
+        <el-table-column prop="status" label="活动状态" align="center" v-if="select === '1' || select === '5'" width="150"> </el-table-column>
+        <el-table-column prop="aorganizer" label="组织名称" align="center"> </el-table-column>
         <el-table-column label="查看详情" width="120" align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="btnHandler(scope.row)">查看详情</el-button>
@@ -38,76 +38,25 @@ import Activity from './Activity.vue'
 export default {
   data() {
     return {
+      loading: false,
       select: '1',
       keyword: '',
       radio: '1',
-      activityData: [
-        {
-          id: '10009',
-          name: '【全天】西溪医院志愿服务活动',
-          startTime: '2021-05-04',
-          endTime: '2021-05-04',
-          state: '志愿时数表已提交',
-          organization: '浙江工业大学青年志愿者协会药学分会'
-        },
-        {
-          id: '2',
-          name: '【全天】西溪医院志愿服务活动',
-          startTime: '',
-          endTime: '',
-          state: '志愿时数表已提交',
-          organization: ''
-        },
-        {
-          id: '3',
-          name: '【全天】西溪医院志愿服务活动',
-          startTime: '',
-          endTime: '',
-          state: '志愿时数表已提交',
-          organization: ''
-        },
-        {
-          id: '4',
-          name: '【全天】西溪医院志愿服务活动',
-          startTime: '',
-          endTime: '',
-          state: '志愿时数表已提交',
-          organization: ''
-        },
-        {
-          id: '5',
-          name: '【全天】西溪医院志愿服务活动',
-          startTime: '',
-          endTime: '',
-          state: '志愿时数表已提交',
-          organization: ''
-        },
-        {
-          id: '6',
-          name: '【全天】西溪医院志愿服务活动',
-          startTime: '',
-          endTime: '',
-          state: '志愿时数表已提交',
-          organization: ''
-        },
-        {
-          id: '7',
-          name: '【全天】西溪医院志愿服务活动',
-          startTime: '',
-          endTime: '',
-          state: '志愿时数表已提交',
-          organization: ''
-        }
-      ],
-      total: 5126,
+      activityData: [],
+      total: 0,
       currentPage: 1,
       pageSize: 20
     }
   },
+  computed: {
+    flag() {
+      return this.$store.state.updateActivityFlag1
+    }
+  },
   methods: {
     search() {
-      if (this.radio === '1') return this.activityData.filter(item => item.name.includes(this.keyword))
-      if (this.radio === '2') return this.activityData.filter(item => item.organization.includes(this.keyword))
+      if (this.radio === '1') return this.activityData.filter(item => item.aname.includes(this.keyword))
+      if (this.radio === '2') return this.activityData.filter(item => item.aorganization.includes(this.keyword))
     },
     handleSizeChange(val) {
       this.pageSize = val
@@ -119,12 +68,62 @@ export default {
     },
     btnHandler(row) {
       let newTab = {
-        title: row.name,
-        name: row.id + row.name,
+        title: row.aname,
+        name: 'a' + row.aid,
         content: Activity
       }
       this.$store.commit('addTab', newTab)
+    },
+    loadData() {
+      this.loading = true
+      if (this.select === '1') {
+        this.$api
+          .getActivity({
+            pageNum: this.currentPage,
+            pageSize: this.pageSize
+          })
+          .then(res => {
+            this.total = res.data.total
+            this.activityData = res.data.list
+            this.loading = false
+          })
+          .then(() => {
+            if (this.flag) {
+              this.$store.commit('updateActivityList', false)
+            }
+          })
+      } else {
+        this.$api
+          .getActivityQuery({
+            pageNum: this.currentPage,
+            pageSize: this.pageSize,
+            select: this.select
+          })
+          .then(res => {
+            this.total = res.data.total
+            this.activityData = res.data.list
+            this.loading = false
+          })
+          .then(() => {
+            if (this.flag) {
+              this.$store.commit('updateActivityList', false)
+            }
+          })
+      }
     }
+  },
+  watch: {
+    select() {
+      this.loadData()
+    },
+    flag(newValue) {
+      if (newValue) {
+        this.loadData()
+      }
+    }
+  },
+  created() {
+    this.loadData()
   },
   components: {
     Activity

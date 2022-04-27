@@ -6,7 +6,14 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  created() {
+    // 在页面加载时读取sessionStorage里的状态信息
+    if (sessionStorage.getItem('dataInfo')) {
+      this.$store.commit('inist', JSON.parse(sessionStorage.getItem('dataInfo')))
+      // this.$store.replaceState(Object.assign({}, this.$store.state, JSON.parse(sessionStorage.getItem('store'))))
+    }
+  }
 }
 </script>
 
@@ -23,9 +30,9 @@ body {
   height: 58vh;
   overflow-y: auto;
 }
-.el-table .cell {
+/* .el-table .cell {
   white-space: pre;
-}
+} */
 span.el-pagination__jump {
   /* 分页的共几条 */
   margin: 0 18px;
@@ -43,7 +50,19 @@ span.el-pagination__jump {
 .el-form-item.ppK.el-form-item--feedback .el-form-item__content {
   margin: 0px !important;
 }
-.ppK.el-input.el-input--mini input.el-input__inner{
+.el-form-item.ppK.el-form-item--large .el-form-item__content {
+  margin: 0px !important;
+}
+.ppK.el-input.el-input--mini input.el-input__inner {
   text-align: center;
+}
+.el-form-item.ppK1.el-form-item--large .el-form-item__content {
+  margin: 0px !important;
+}
+.ppK1 .el-form-item__content {
+  line-height: normal;
+}
+.ppK1 .ql-editor {
+  height: 325px;
 }
 </style>

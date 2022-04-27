@@ -15,11 +15,31 @@
 export default {
   data() {
     return {
-      id: '10009',
-      name: 'ppKritt',
-      organization: '浙江工业大学青年志愿者协会药学分会',
-      jurisdiction: ['招募管理', '活动管理', '活动高级管理', '志愿时数查询', '志愿时数管理', '志愿者信用名单管理', '志愿者反馈管理', '系统管理']
+      id: '',
+      name: '',
+      organization: '',
+      jurisdiction: [],
+      jurisdictions: ['超级管理员', '招募管理', '活动管理', '活动高级管理', '志愿时数查询', '志愿时数管理', '志愿者信用名单管理', '志愿者反馈管理', '系统管理']
     }
+  },
+  methods: {
+    loadData() {
+      this.$api
+        .getUserById({
+          astudentid: this.$store.state.uid
+        })
+        .then(res => {
+          this.id = res.data.data.astudentid
+          this.name = res.data.data.aname
+          this.organization = res.data.data.aorganization
+          for (let char of res.data.data.apower) {
+            this.jurisdiction.push(this.jurisdictions[parseInt(char)])
+          }
+        })
+    }
+  },
+  created() {
+    this.loadData()
   }
 }
 </script>
@@ -28,7 +48,7 @@ export default {
   font-size: 20px;
   font-weight: 300;
 }
-p{
+p {
   padding-left: 15px;
 }
 </style>

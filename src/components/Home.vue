@@ -6,13 +6,13 @@
         <el-dropdown @command="addTab">
           <span style="color: #ffffef">
             <i class="el-icon-user-solid" style="margin-left: 2px;color: #ffffef"></i>
-            {{ $store.state.uname }}
+            {{ $store.state.uid }}
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="23">个人信息</el-dropdown-item>
             <el-dropdown-item command="24">修改密码</el-dropdown-item>
             <el-dropdown-item command="25">关于系统</el-dropdown-item>
-            <el-dropdown-item>退出系统</el-dropdown-item>
+            <el-dropdown-item @click.native="logOut">退出系统</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
@@ -21,21 +21,21 @@
           <el-menu>
             <el-submenu index="1">
               <template slot="title"><i class="el-icon-s-promotion"></i>招募管理</template>
-              <el-menu-item index="1-1" @click="addTab('1')">新建招募</el-menu-item>
+              <el-menu-item index="1-1" @click="addTab('1')" :disabled="$store.state.power[1]">新建招募</el-menu-item>
               <el-menu-item index="1-2" @click="addTab('2')">进行中的招募</el-menu-item>
               <el-menu-item index="1-3" @click="addTab('3')">已完成的招募</el-menu-item>
             </el-submenu>
             <el-submenu index="2">
               <template slot="title"><i class="el-icon-s-order"></i>活动管理</template>
-              <el-menu-item index="2-1" @click="addTab('4')">新建活动</el-menu-item>
+              <el-menu-item index="2-1" @click="addTab('4')" :disabled="$store.state.power[2]">新建活动</el-menu-item>
               <el-menu-item index="2-2" @click="addTab('5')">查询活动</el-menu-item>
             </el-submenu>
             <el-submenu index="3">
               <template slot="title"><i class="el-icon-s-check"></i>活动高级管理</template>
-              <el-menu-item index="3-1" @click="addTab('6')">活动审批</el-menu-item>
+              <el-menu-item index="3-1" @click="addTab('6')" :disabled="$store.state.power[3]">活动审批</el-menu-item>
               <el-submenu index="3-2">
                 <template slot="title"><i class="el-icon-s-home"></i>共建基地管理</template>
-                <el-menu-item index="3-2-1" @click="addTab('7')">新建共建基地</el-menu-item>
+                <el-menu-item index="3-2-1" @click="addTab('7')" :disabled="$store.state.power[3]">新建共建基地</el-menu-item>
                 <el-menu-item index="3-2-2" @click="addTab('8')">共建基地管理</el-menu-item>
                 <el-menu-item index="3-2-3" @click="addTab('9')">共建基地概况</el-menu-item>
               </el-submenu>
@@ -43,8 +43,8 @@
             <el-menu-item index="4" @click="addTab('10')"> <i class="el-icon-search"></i><span slot="title">志愿时数查询</span> </el-menu-item>
             <el-submenu index="5">
               <template slot="title"><i class="el-icon-edit-outline"></i>志愿时数管理</template>
-              <el-menu-item index="5-1" @click="addTab('11')">志愿时数导入</el-menu-item>
-              <el-menu-item index="5-2" @click="addTab('12')">志愿时数管理</el-menu-item>
+              <el-menu-item index="5-1" @click="addTab('11')" :disabled="$store.state.power[5]">志愿时数导入</el-menu-item>
+              <el-menu-item index="5-2" @click="addTab('12')" :disabled="$store.state.power[5]">志愿时数管理</el-menu-item>
               <el-menu-item index="5-3" @click="addTab('13')">志愿活动时数总览</el-menu-item>
             </el-submenu>
             <el-submenu index="6">
@@ -53,16 +53,16 @@
               <el-menu-item index="6-2" @click="addTab('15')">志愿者信用积分管理</el-menu-item>
               <el-menu-item index="6-3" @click="addTab('16')">志愿者信用积分管理条例</el-menu-item>
             </el-submenu>
-            <el-menu-item index="7" @click="addTab('17')">
+            <el-menu-item index="7" @click="addTab('17')" :disabled="$store.state.power[7]">
               <i class="el-icon-chat-line-square"></i>
               <span slot="title">志愿者反馈管理</span>
             </el-menu-item>
             <el-submenu index="8">
               <template slot="title"><i class="el-icon-menu"></i>系统管理</template>
               <el-menu-item index="8-1" @click="addTab('18')">用户管理</el-menu-item>
-              <el-menu-item index="8-2" @click="addTab('19')">新建公告</el-menu-item>
-              <el-menu-item index="8-3" @click="addTab('20')">系统日志</el-menu-item>
-              <el-menu-item index="8-4" @click="addTab('21')">系统更新</el-menu-item>
+              <el-menu-item index="8-2" @click="addTab('19')" :disabled="$store.state.power[8]">新建公告</el-menu-item>
+              <el-menu-item index="8-3" @click="addTab('20')" :disabled="$store.state.power[8]">系统日志</el-menu-item>
+              <el-menu-item index="8-4" @click="addTab('21')" :disabled="$store.state.power[8]">系统更新</el-menu-item>
               <el-menu-item index="8-5" @click="addTab('22')">志愿者征信管理条例</el-menu-item>
             </el-submenu>
           </el-menu>
@@ -245,6 +245,13 @@ export default {
     }
   },
   methods: {
+    logOut() {
+      // 清空token
+      window.sessionStorage.clear()
+      // 跳转到登录页
+      this.$router.push('/login')
+      this.$store.commit('logOut')
+    },
     addTab(targetName) {
       this.$store.commit('addTabs', { targetName: targetName, tab: this.tab })
     },

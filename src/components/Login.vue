@@ -31,13 +31,33 @@ export default {
   methods: {
     login() {
       if (this.uname.length <= 0 || this.upwd.length <= 0) {
-        alert('请登录！')
+        alert('用户名或密码不能为空')
       } else {
-        // alert('登录成功！')
-        // 假设这个 tokenStr 是登录成功后服务器返回的 token 身份令牌
-        const tokenStr = 'sdnhjahfcusjvhbueaakdjxikwihefnciwnakdnkfaqiq'
-        window.sessionStorage.setItem('token', tokenStr)
-        this.$router.push('/home')
+        this.$api
+          .login({
+            astudentid: this.uname,
+            apassword: this.upwd
+          })
+          .then(res => {
+            if (res.data.code === 0) {
+              const tokenStr = res.headers['authorization']
+              sessionStorage.setItem('dataInfo', JSON.stringify(res.data.data))
+              window.sessionStorage.setItem('token', tokenStr)
+              this.$router.push('/home')
+              this.$store.commit('inist', res.data.data)
+            } else {
+              alert(res.data.msg)
+              this.uname = ''
+              this.upwd = ''
+            }
+            // console.log(res)
+          })
+          .catch(err => {
+            if (err.response && err.response.data && err.response.data.code === 1224) {
+              alert(err.response.data.msg)
+              console.log(err.response)
+            }
+          })
       }
     }
   }

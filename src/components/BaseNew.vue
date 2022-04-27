@@ -1,27 +1,25 @@
 <template>
   <div>
     <el-divider content-position="left">新建共建基地</el-divider>
-    <el-form ref="form" :model="baseForm" label-width="80px" style="padding-right:20px" size="large">
-      <el-row style="margin-bottom:22px">
-        <el-input v-model="baseForm.name" placeholder="请输入基地名称">
+    <el-form ref="multipleTable" :model="baseForm" status-icon label-width="80px" style="padding-right:20px" size="large" :rules="rules">
+      <el-form-item class="ppK" prop="bname">
+        <el-input v-model="baseForm.bname" placeholder="请输入基地名称">
           <template slot="prepend">基地名称</template>
         </el-input>
-      </el-row>
+      </el-form-item>
 
-      <el-row class="ppk" style="margin-bottom:22px">
-        <div class="pre" style="float: left;border-right: 0;border-top-right-radius: 0;border-bottom-right-radius: 0;">所属组织</div>
-        <el-select v-model="baseForm.organization" placeholder="请选择所属组织" style="float: left">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
-        </el-select>
-      </el-row>
+      <el-form-item class="ppK" prop="borganization">
+        <el-input v-model="baseForm.borganization" placeholder="请输入所属组织">
+          <template slot="prepend">所属组织</template>
+        </el-input>
+      </el-form-item>
 
-      <el-row class="ppk" style="margin-bottom: 64px">
-        <div class="pre" style="text-align: left;border-bottom: 0;border-bottom-left-radius: 0;border-bottom-right-radius: 0;">活动详情</div>
-        <quill-editor ref="text" v-model="baseForm.content" class="myQuillEditor" :options="editorOption" style="height: 350px;" />
-      </el-row>
+      <el-form-item class="ppK1" prop="binfo">
+        <div class="pre" style="text-align: left;border-bottom: 0;border-bottom-left-radius: 0;border-bottom-right-radius: 0;">基地详情</div>
+        <quill-editor ref="text" v-model="baseForm.binfo" class="myQuillEditor" :options="editorOption" @change="changeQuillEditor" @blur="changeQuillEditor" />
+      </el-form-item>
       <el-form-item size="large">
-        <el-button type="primary" @click="onSubmit">提交</el-button>
+        <el-button type="primary" @click="onSubmit('multipleTable')">提交</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -30,17 +28,36 @@
 import { quillEditor } from 'vue-quill-editor'
 export default {
   data() {
+    var checkName = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('基地名称不能为空'))
+      } else {
+        callback()
+      }
+    }
+    var checkOrganization = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('所属组织名称不能为空'))
+      } else {
+        callback()
+      }
+    }
     return {
       baseForm: {
-        name: '',
-        organization: '',
-        content: ''
+        bname: '',
+        borganization: '',
+        binfo: ''
       },
       editorOption: {
         modules: {
           toolbar: [[{ size: ['small', false, 'large', 'huge'] }], [{ color: [] }, { font: [] }], ['bold', 'italic', 'underline', 'strike', { align: [] }], [{ header: 1 }, { header: 2 }], [{ list: 'ordered' }, { list: 'bullet' }], [{ indent: '-1' }, { indent: '+1' }], [{ direction: 'rtl' }]]
         },
         placeholder: ''
+      },
+      rules: {
+        bname: [{ validator: checkName, trigger: 'blur' }],
+        borganization: [{ validator: checkOrganization, trigger: 'blur' }],
+        binfo: [{ required: true, message: '基地详情不能为空', trigger: 'blur' }]
       }
     }
   },
@@ -48,8 +65,65 @@ export default {
     quillEditor
   },
   methods: {
-    onSubmit() {
-      console.log(this.baseForm.content)
+    changeQuillEditor() {
+      if (this.baseForm.binfo.trim() === '') {
+        this.$refs.multipleTable.validateField('binfo')
+      } else {
+        this.$refs.multipleTable.clearValidate() // clearValidate()取消验证方法
+      }
+    },
+    async clearAll() {
+      await this.$refs.multipleTable.resetFields()
+      await this.$refs.multipleTable.clearValidate()
+    },
+    onSubmit(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.$api
+            .addBase({
+              bname: this.baseForm.bname,
+              borganization: this.baseForm.borganization,
+              binfo: this.baseForm.binfo,
+              bstatus: 1
+            })
+            .then(res => {
+              if (res.data.code === 0) {
+                this.$message({
+                  showClose: true,
+                  message: res.data.msg,
+                  duration: 1000,
+                  type: 'success'
+                })
+                this.clearAll()
+              } else {
+                this.$message({
+                  showClose: true,
+                  message: res.data.msg,
+                  duration: 2000,
+                  type: 'error'
+                })
+              }
+            })
+            .catch(err => {
+              if (err.response && err.response.data && err.response.data.code === 1224) {
+                this.$message({
+                  showClose: true,
+                  message: err.response.data.msg,
+                  duration: 2000,
+                  type: 'error'
+                })
+              }
+            })
+        } else {
+          this.$message({
+            showClose: true,
+            message: '请完善信息！',
+            duration: 1000,
+            type: 'warning'
+          })
+          return false
+        }
+      })
     }
   }
 }
